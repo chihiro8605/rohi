@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本全国 花の見頃マップ</title>
+
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: #ff69b4;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
+
+#map {
+    height: 85vh;
+    width: 100%;
+}
+
+select {
+    padding: 8px;
+    margin-top: 5px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>🌸 日本全国 花の見頃マップ</h2>
+    <select id="flowerFilter" onchange="filterFlowers()">
+        <option value="all">すべて表示</option>
+        <option value="桜">桜</option>
+        <option value="梅">梅</option>
+        <option value="ネモフィラ">ネモフィラ</option>
+        <option value="ラベンダー">ラベンダー</option>
+        <option value="ひまわり">ひまわり</option>
+    </select>
+</header>
+
+<div id="map"></div>
+
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+// 地図作成
+const map = L.map('map').setView([36.2048, 138.2529], 5);
+
+// OpenStreetMap読み込み
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+}).addTo(map);
+
+// 花データ
+const flowerSpots = [
+    {
+        name: "弘前公園",
+        lat: 40.6032,
+        lng: 140.4648,
+        flower: "桜",
+        season: "4月",
+        image: "https://aomori-tourism.com/lsc/upfile/articleDetail/0000/0311/311_1_l.jpg"
+        const sakuraIcon = L.icon({
+   　　 iconUrl: 'sakura.png',
+    　　iconSize: [30, 30]
+    },
+    {
+        name: "偕楽園",
+        lat: 36.3789,
+        lng: 140.4556,
+        flower: "梅",
+        season: "3月",
+        image: "https://www.ana.co.jp/japan-travel-planner/area/kanto/ibaraki/0000011/main.jpg"
+         const umeIcon = L.icon({
+   　　 iconUrl: 'ume.png',
+    　　iconSize: [30, 30]
+    },
+    {
+        name: "国営ひたち海浜公園",
+        lat: 36.4053,
+        lng: 140.5970,
+        flower: "ネモフィラ",
+        season: "4〜5月",
+        image: "https://parkful.net/wp-content/uploads/hitachi_nemo04-1024x678.jpg"
+         const nemofiraIcon = L.icon({
+   　　 iconUrl: 'nemofira.png',
+    　　iconSize: [30, 30]
+    },
+    {
+        name: "富良野",
+        lat: 43.3425,
+        lng: 142.3832,
+        flower: "ラベンダー",
+        season: "7月",
+        image: "https://www.haskapp.co.jp/wp-content/uploads/2023/10/%E5%AF%8C%E8%89%AF%E9%87%8E-e1697524598589.jpg"
+          const rabemda-Icon = L.icon({
+   　　 iconUrl: 'rabemda-.png',
+    　　iconSize: [30, 30]
+        
+    },
+    {
+        name: "明野ひまわり畑",
+        lat: 35.8335,
+        lng: 138.3915,
+        flower: "ひまわり",
+        season: "8月",
+        image: "https://traveljapan47.net/wp-content/uploads/2017/09/1244akeno3.jpg"
+         const himawariIcon = L.icon({
+   　　 iconUrl: 'himawari.png',
+    　　iconSize: [30, 30]
+    }
+];
+
+let markers = [];
+
+function displayMarkers(spots) {
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+
+    spots.forEach(spot => {
+        const marker = L.marker([spot.lat, spot.lng]).addTo(map);
+
+        marker.bindPopup(`
+            <h3>${spot.name}</h3>
+            <p>花：${spot.flower}</p>
+            <p>見頃：${spot.season}</p>
+            <img src="${spot.image}" width="200">
+        `);
+
+        markers.push(marker);
+    });
+}
+
+function filterFlowers() {
+    const selected = document.getElementById("flowerFilter").value;
+    if (selected === "all") {
+        displayMarkers(flowerSpots);
+    } else {
+        const filtered = flowerSpots.filter(spot => spot.flower === selected);
+        displayMarkers(filtered);
+    }
+}
+
+// 初期表示
+displayMarkers(flowerSpots);
+
+</script>
+
+</body>
+</html>
